@@ -1,0 +1,19 @@
+.game {
+	float: left;
+	width: 60%;
+	margin: 5px;
+}
+.sidebar {
+	float: left;
+	width: 35%;
+	margin: 5px;
+}
+.sidebar p {
+	line-height: 30%;
+	padding-left: 2px;
+	margin-top: 10px;
+}
+.sidebar button {
+	display: block;
+	margin-top: 10px;
+}
