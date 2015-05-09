@@ -7,6 +7,7 @@ $(document).ready(function () {
 			ctx,
 			nextCtx,
 			board,
+			pieceBag,
 			piece,
 			nextPiece,
 			gameLoop,
@@ -45,9 +46,31 @@ $(document).ready(function () {
 		levelText.text("Level: "+level.toString());
 		
 		resetTimer();
-		piece = makePiece(Math.floor(Math.random() * 7) + 1);
-		nextPiece = makePiece(Math.floor(Math.random() * 7) + 1);
+		pieceBag = newList();
+		piece = makePiece(pieceBag.pop());
+		nextPiece = makePiece(pieceBag.pop());
 		paint();
+	}
+	
+	function newList() {
+		var array  = [1,2,3,4,5,6,7];
+		
+		var currentIndex = array.length, temporaryValue, randomIndex ;
+
+		// While there remain elements to shuffle...
+		while (0 !== currentIndex) {
+
+			// Pick a remaining element...
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex -= 1;
+
+			// And swap it with the current element.
+			temporaryValue = array[currentIndex];
+			array[currentIndex] = array[randomIndex];
+			array[randomIndex] = temporaryValue;
+		}
+
+		return array;
 	}
 	
 	function resetTimer() {
@@ -68,8 +91,12 @@ $(document).ready(function () {
 		pieceToWorld().forEach(function (c) {
 			setCell(c.x, c.y, c.col);
 		});
+		
+		if (pieceBag.length == 0)
+			pieceBag = newList();
+		
 		piece = nextPiece;		
-		nextPiece = makePiece(Math.floor(Math.random() * 7) + 1);
+		nextPiece = makePiece(pieceBag.pop());
 		
 		clearLine();
 		
@@ -261,9 +288,9 @@ $(document).ready(function () {
 
 	function makePiece(type) {
 		var piece = {
-			x: 5,
+			x: 4,
 			y: 0,
-			rot: Math.floor(Math.random() * 4),
+			rot: 0,
 			cells: [],
 			col: type
 		};
@@ -275,19 +302,19 @@ $(document).ready(function () {
 			piece.cells.push({x:  1, y: 0});
 			piece.cells.push({x:  2, y: 0});
 		} else if (type === 2) {
-			// ###
-			//   #
-			piece.cells.push({x: -1, y: 0});
-			piece.cells.push({x:  0, y: 0});
-			piece.cells.push({x:  1, y: 0});
-			piece.cells.push({x : 1, y: 1});
-		} else if (type === 3) {
-			// ###
 			// #
+			// ###
+			piece.cells.push({x: -1, y: -1});
+			piece.cells.push({x: -1, y: 0});
+			piece.cells.push({x:  0, y: 0});
+			piece.cells.push({x : 1, y: 0});
+		} else if (type === 3) {
+			//   #
+			// ###
 			piece.cells.push({x: -1, y: 0});
 			piece.cells.push({x:  0, y: 0});
 			piece.cells.push({x:  1, y: 0});
-			piece.cells.push({x: -1, y: 1});
+			piece.cells.push({x:  1, y: -1});
 		} else if (type === 4) {
 			// ##
 			// ##
@@ -298,24 +325,24 @@ $(document).ready(function () {
 		} else if (type === 5) {
 			//  ##
 			// ##
-			piece.cells.push({x: -1, y: 1});
-			piece.cells.push({x:  0, y: 1});
-			piece.cells.push({x:  0, y: 0});
-			piece.cells.push({x:  1, y: 0});
-		} else if (type === 6) {
-			// ###
-			//  #
 			piece.cells.push({x: -1, y: 0});
 			piece.cells.push({x:  0, y: 0});
-			piece.cells.push({x:  0, y: 1});
+			piece.cells.push({x:  0, y: -1});
+			piece.cells.push({x:  1, y: -1});
+		} else if (type === 6) {
+			//  #
+			// ###
+			piece.cells.push({x: -1, y: 0});
+			piece.cells.push({x:  0, y: 0});
+			piece.cells.push({x:  0, y: -1});
 			piece.cells.push({x:  1, y: 0});
 		} else if (type === 7) {
 			// ##
 			//  ##
-			piece.cells.push({x: -1, y: 0});
+			piece.cells.push({x: -1, y: -1});
+			piece.cells.push({x:  0, y: -1});
 			piece.cells.push({x:  0, y: 0});
-			piece.cells.push({x:  0, y: 1});
-			piece.cells.push({x:  1, y: 1});
+			piece.cells.push({x:  1, y: 0});
 		}
 
 		var move = 0;
